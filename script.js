@@ -1,15 +1,15 @@
 
 const words = [
-  { en: "Actions", pt: "Ações" },
-  { en: "Advancing", pt: "Avançando" },
-  { en: "Borders", pt: "Fronteiras" },
-  { en: "Build", pt: "Construir" },
-  { en: "Urban", pt: "Urbano" },
-  { en: "Endangered species", pt: "Espécies ameaçadas" },
-  { en: "Civilisation", pt: "Civilização" },
-  { en: "Middle class", pt: "Classe média" },
-  { en: "Eco-friendly", pt: "Ecológico" },
-  { en: "Renewable energy", pt: "Energia renovável" }
+  { en: "Actions", pt: "acoes.png" },
+  { en: "Advancing", pt: "avancando.png" },
+  { en: "Borders", pt: "fronteiras.png" },
+  { en: "Build", pt: "construir.png" },
+  { en: "Urban", pt: "urbano.png" },
+  { en: "Endangered species", pt: "ameacadas.png" },
+  { en: "Civilisation", pt: "civilizacao.png" },
+  { en: "Middle class", pt: "classe_media.png" },
+  { en: "Eco-friendly", pt: "ecologico.png" },
+  { en: "Renewable energy", pt: "energia_renovavel.png" }
 ];
 const memoryGrid = document.getElementById("memoryGrid");
 let cards = [];
@@ -26,9 +26,14 @@ cards.forEach((card, i) => {
   cardElement.classList.add("memory-card");
   cardElement.dataset.id = card.id;
 
+  const frontText = card.lang === "en" ? "EN" : "PT";
+  const backContent = card.lang === "pt"
+    ? `<img src="images/${card.text}" alt="Translation" style="max-width:90%; max-height:90%; border-radius:8px;" />`
+    : card.text;
+
   cardElement.innerHTML = `
-    <div class="front">${card.lang === "en" ? "EN" : "PT"}</div>
-    <div class="back">${card.text}</div>
+    <div class="front">${frontText}</div>
+    <div class="back">${backContent}</div>
   `;
 
   cardElement.addEventListener("click", () => {
