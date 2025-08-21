@@ -35,13 +35,25 @@ function parseNameColor(text) {
   return {};
 }
 
-function giveCard(name, color, qty) {
-  // Placeholder implementation for integration with existing app logic
-  console.log(`giveCard called with`, name, color, qty);
+// Dispara a requisição para registrar um cartão entregue.
+// Retorna a resposta da API ou lança um erro em caso de falha.
+async function giveCard(name, color, qty) {
+  const response = await fetch('/api/cards', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, color, qty })
+  });
+
+  if (!response.ok) {
+    throw new Error('Falha ao registrar o cartão');
+  }
+
+  return response.json();
 }
 
 export default function ClassCardsApp() {
   const [listening, setListening] = useState(false);
+  const [feedback, setFeedback] = useState('');
   const recognitionRef = useRef(null);
 
   useEffect(() => {
@@ -54,13 +66,19 @@ export default function ClassCardsApp() {
     recognition.continuous = true;
     recognition.interimResults = false;
 
-    recognition.onresult = event => {
+    recognition.onresult = async event => {
       const transcript = Array.from(event.results)
         .map(result => result[0].transcript)
         .join(' ');
       const { name, color } = parseNameColor(transcript);
       if (name && color) {
-        giveCard(name, color, 1);
+        try {
+          await giveCard(name, color, 1);
+          setFeedback(`Cartão enviado para ${name} (${color}).`);
+        } catch (error) {
+          console.error('Erro ao dar o cartão', error);
+          setFeedback('Não foi possível enviar o cartão.');
+        }
       }
     };
 
@@ -98,6 +116,7 @@ export default function ClassCardsApp() {
         {listening ? 'Desativar microfone' : 'Ativar microfone'}
       </button>
       <p>Status: {listening ? 'listening' : 'paused'}</p>
+      {feedback && <p>{feedback}</p>}
     </div>
   );
 }
