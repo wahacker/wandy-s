@@ -25,8 +25,8 @@ function parseNameColor(text) {
     white: 'white',
   };
   const regex = new RegExp(
-    `\\b(\\w+)\\b\\s+(${Object.keys(colorMap).join('|')})`,
-    'i'
+    `\\b([\\p{L} ]+)\\b\\s+(${Object.keys(colorMap).join('|')})`,
+    'iu'
   );
   const match = text.toLowerCase().match(regex);
   if (match) {
